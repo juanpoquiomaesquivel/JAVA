@@ -1,0 +1,14 @@
+DROP DATABASE IF EXISTS conexionmysql;
+CREATE DATABASE conexionmysql;
+USE conexionmysql;
+DROP TABLE IF EXISTS cliente;
+CREATE TABLE cliente (
+id INT NOT NULL AUTO_INCREMENT,
+nombres VARCHAR(20) DEFAULT NULL,
+apellidos VARCHAR(20) DEFAULT NULL,
+PRIMARY KEY (id)
+) ENGINE = InnoDB;
+INSERT INTO cliente (nombres, apellidos) VALUES ("Jorge Armando", "Salas Rojas");
+INSERT INTO cliente (nombres, apellidos) VALUES ("Mónica", "Torres Díaz");
+INSERT INTO cliente (nombres, apellidos) VALUES ("Carlo Magno", "Pastor López");
+INSERT INTO cliente (nombres, apellidos) VALUES ("María", "Correa Huerta");
