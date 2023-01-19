@@ -1,1 +1,3 @@
-/ConexionMySQL/target/
+target/
+/.metadata/
+.settings/
