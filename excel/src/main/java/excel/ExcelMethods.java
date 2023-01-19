@@ -43,20 +43,20 @@ public class ExcelMethods {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void writeFullExcel(String sheetName, Map<String, Object[]> data) {
 		sheet = workbook.createSheet(sheetName);
 		Set<String> keyset = data.keySet();
 		int rowNumber = 0;
-		
+
 		for (String key : keyset) {
 			Row row = sheet.createRow(rowNumber++);
 			Object[] objArr = data.get(key);
 			int cellNumber = 0;
-			
+
 			for (Object obj : objArr) {
 				Cell cell = row.createCell(cellNumber++);
-				
+
 				if (obj instanceof String) {
 					cell.setCellValue((String) obj);
 				} else if (obj instanceof Integer) {
@@ -109,6 +109,17 @@ public class ExcelMethods {
 			e.printStackTrace();
 		}
 	}
+
+	public void readingSpecificCell(int sheetNumber, int row, int cell) {
+		try {
+			sheet = workbook.getSheetAt(sheetNumber);
+			System.out.println(sheet.getRow(row).getCell(cell));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
 
 // How to read in excel using Java(apachi poi) => https://youtu.be/mtDWo4CShM4
+// How to write in excel file using Java(Apachi poi). => https://youtu.be/_b1aEkTM91o
+// How To Read Specific Cell in Excel using Java(Apachi poi) => https://youtu.be/WWZsbfxVedg

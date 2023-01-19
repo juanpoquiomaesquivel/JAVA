@@ -13,15 +13,20 @@ public class ExcelMainClass {
 		 * readExcel.useExistingWorkbook(filePath); readExcel.readFullExcelFile(0);
 		 */
 
-		Map<String, Object[]> data = new TreeMap<>();
-		data.put("1", new Object[] { "ID", "NAME", "LASTNAME" });
-		data.put("2", new Object[] { 1, "Shahil", "Kumar" });
-		data.put("3", new Object[] { 2, "Ayush", "Prajapati" });
-		data.put("4", new Object[] { 3, "Sanjay", "Pandit" });
+		/*
+		 * Map<String, Object[]> data = new TreeMap<>(); data.put("1", new Object[] {
+		 * "ID", "NAME", "LASTNAME" }); data.put("2", new Object[] { 1, "Shahil",
+		 * "Kumar" }); data.put("3", new Object[] { 2, "Ayush", "Prajapati" });
+		 * data.put("4", new Object[] { 3, "Sanjay", "Pandit" });
+		 * 
+		 * ExcelMethods writingExcel = new ExcelMethods();
+		 * writingExcel.createNewExcelFile(filePath);
+		 * writingExcel.writeFullExcel("NameOfPeople", data);
+		 * writingExcel.saveAndCloseTheFile();
+		 */
 
-		ExcelMethods writingExcel = new ExcelMethods();
-		writingExcel.createNewExcelFile(filePath);
-		writingExcel.writeFullExcel("NameOfPeople", data);
-		writingExcel.saveAndCloseTheFile();
+		ExcelMethods readingSpecificCell = new ExcelMethods();
+		readingSpecificCell.useExistingWorkbook(filePath);
+		readingSpecificCell.readingSpecificCell(0, 3, 2);
 	}
 }
