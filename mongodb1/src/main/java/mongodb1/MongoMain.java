@@ -1,6 +1,7 @@
 package mongodb1;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -17,14 +18,19 @@ public class MongoMain {
 		MongoDatabase mongoDatabase = mongoClient.getDatabase("MongoDB");
 		MongoCollection collection = mongoDatabase.getCollection("test");
 		
-		Document document = new Document("name", "Daeshan");
-		document.append("Sex", "Male");
-		document.append("Age", "21");
-		document.append("Race", "African-American");
+		System.out.println("Base de datos conectada!");
 		
-		collection.insertOne(document);
+		Document found = (Document) collection.find(new Document("name", "Daeshan")).first();
+		
+		if (found != null) {
+			System.out.println("Found User!");
+			
+			Bson updatedValue = new Document("Age", 33);
+			Bson updateOperation = new Document("$set", updatedValue);
+			collection.updateOne(found, updateOperation);
+			System.out.println("User updated!");
+		}
 	}
 }
 
-// https://www.youtube.com/watch?v=L5ORfm4i350&list=PLdnyVeMcpY7_Q3ms_ykCBgXOeCFGDleS2&index=1
-// https://www.youtube.com/watch?v=YbB6yjJSoKs&list=PLdnyVeMcpY7_Q3ms_ykCBgXOeCFGDleS2&index=2
+// https://www.youtube.com/watch?v=RRVtfE165qo&list=PLdnyVeMcpY7_Q3ms_ykCBgXOeCFGDleS2&index=3
