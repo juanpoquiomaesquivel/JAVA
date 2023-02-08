@@ -7,29 +7,27 @@ public class ControladorMichi {
 	public static void jugar() {
 		var scanner = new Scanner(System.in);
 		var michi = new Michi();
-		var p = new char[] { 'x', 'o' };
-		var ganador = 'T';
 		var turno = 0;
 		int posx, posy;
 
 		do {
+			System.out.println("==============================================");
 			System.out.println("Turno del jugador #" + (turno + 1) + "!");
-			System.out.println("Su símbolo es -> " + p[turno]);
 
 			do {
 				System.out.print("Ingrese la posición en el eje X elegida: ");
 				posx = scanner.nextInt();
 				System.out.print("Ingrese la posición en el eje Y elegida: ");
 				posy = scanner.nextInt();
-			} while (!michi.marcarCasilla(p[turno], posx, posy));
+			} while (!michi.marcarCasilla(posx, posy));
 
-			ganador = michi.hayGanador();
-			turno = ++turno % 2;
+			turno = (turno + 1) % 2;
 			mostrarTablero(michi.getTablero());
-		} while (!michi.seAcabo() && ganador == '-');
+			System.out.println("==============================================");
+		} while (michi.elJuegoContinua());
 
 		scanner.close();
-		System.out.println("El ganador es: " + ganador);
+		System.out.println("El ganador es: " + michi.getGanador());
 	}
 
 	private static void mostrarTablero(char[][] tablero) {
