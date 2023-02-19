@@ -27,6 +27,10 @@ public abstract class Juego {
 		estado = DETENIDO;
 	}
 
+	public void reanudar() {
+		estado = JUGANDO;
+	}
+
 	public void reiniciar() {
 		estado = ESPERANDO;
 	}
@@ -43,23 +47,11 @@ public abstract class Juego {
 		return jugador1;
 	}
 
-	public void setJugador1(Jugador jugador1) {
-		this.jugador1 = jugador1;
-	}
-
 	public Jugador getJugador2() {
 		return jugador2;
 	}
 
-	public void setJugador2(Jugador jugador2) {
-		this.jugador2 = jugador2;
-	}
-
 	public Jugador getGanador() {
 		return ganador;
-	}
-
-	public void setGanador(Jugador ganador) {
-		this.ganador = ganador;
 	}
 }

@@ -1,5 +1,7 @@
 package juanp.michi.vista;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 public class VistaMichi extends JFrame {
@@ -8,7 +10,9 @@ public class VistaMichi extends JFrame {
 		setTitle("Juego MICHI");
 		setSize(400, 600);
 		setLocationRelativeTo(null);
-		setLayout(null);
+		getContentPane().setLayout(null);
+		getContentPane().setPreferredSize(new Dimension(400, 600));
+		pack();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		add(panelMenu);
