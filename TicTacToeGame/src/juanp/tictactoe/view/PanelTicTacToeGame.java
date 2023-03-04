@@ -1,13 +1,13 @@
-package juanp.michi.vista;
+package juanp.tictactoe.view;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class PanelMichi extends JPanel {
+public class PanelTicTacToeGame extends JPanel {
 
-	public PanelMichi() {
+	public PanelTicTacToeGame() {
 		setSize(400, 400);
 		setLocation(0, 200);
 		setLayout(null);

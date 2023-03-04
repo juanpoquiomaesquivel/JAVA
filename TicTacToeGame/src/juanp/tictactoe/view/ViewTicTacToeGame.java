@@ -1,13 +1,13 @@
-package juanp.michi.vista;
+package juanp.tictactoe.view;
 
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-public class VistaMichi extends JFrame {
+public class ViewTicTacToeGame extends JFrame {
 
-	public VistaMichi() {
-		setTitle("Juego MICHI");
+	public ViewTicTacToeGame() {
+		setTitle("Tic Tac Toe");
 		setSize(400, 600);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -16,9 +16,9 @@ public class VistaMichi extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		add(panelMenu);
-		add(panelMichi);
+		add(panelTicTacToeGame);
 	}
 
 	public PanelMenu panelMenu = new PanelMenu();
-	public PanelMichi panelMichi = new PanelMichi();
+	public PanelTicTacToeGame panelTicTacToeGame = new PanelTicTacToeGame();
 }
