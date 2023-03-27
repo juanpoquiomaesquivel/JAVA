@@ -4,10 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
-import javax.swing.JButton;
-import javax.swing.SwingWorker;
 
 import com.juanp.stopwatch.model.Stopwatch;
 import com.juanp.stopwatch.view.StopwatchFrame;
@@ -31,8 +27,8 @@ public class StopwatchController {
 
 	private void init() {
 		model.addPropertyChangeListener(new SwPropertiesListener());
-		view.getBtnStart().addActionListener(new SwBtnStartListener());
-		view.getBtnStopReset().addActionListener(new SwBtnStopResetListener());
+		view.getBtnPlayPause().addActionListener(new SwBtnStartPauseListener());
+		view.getBtnReset().addActionListener(new SwBtnResetListener());
 	}
 
 	private class SwPropertiesListener implements PropertyChangeListener {
@@ -50,48 +46,45 @@ public class StopwatchController {
 			if (evt.getPropertyName().equals("seconds")) {
 				int ss = (int) evt.getNewValue();
 				String txt = ss < 10 ? "0" + Integer.toString(ss) : Integer.toString(ss);
-				
+
 				view.getLblSeconds().setText(txt);
 			}
 
 			if (evt.getPropertyName().equals("minutes")) {
 				int mm = (int) evt.getNewValue();
 				String txt = mm < 10 ? "0" + Integer.toString(mm) : Integer.toString(mm);
-				
+
 				view.getLblMinutes().setText(txt);
 			}
 		}
 	}
 
-	private class SwBtnStartListener implements ActionListener {
+	private class SwBtnStartPauseListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			model.start();
-			view.getBtnStart().setEnabled(false);
-			view.getBtnStopReset().setText("STOP");
-			view.getBtnStopReset().setEnabled(true);
+			String name = view.getBtnPlayPause().getName();
+
+			if ("play".equals(name)) {
+				model.start();
+				view.getBtnPlayPause().setIcon(view.getImgBtnPause());
+				view.getBtnPlayPause().setName("pause");
+			} else {
+				model.stop();
+				view.getBtnPlayPause().setIcon(view.getImgBtnPlay());
+				view.getBtnPlayPause().setName("play");
+			}
 		}
 	}
 
-	private class SwBtnStopResetListener implements ActionListener {
+	private class SwBtnResetListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton btn = (JButton) e.getSource();
-			String txt = btn.getText().toLowerCase();
-
-			if (txt.equals("stop")) {
-				model.stop();
-				view.getBtnStart().setText("RESUME");
-				view.getBtnStopReset().setText("RESET");
-			} else {
-				model.reset();
-				view.getBtnStart().setText("START");
-				view.getBtnStopReset().setEnabled(false);
-			}
-
-			view.getBtnStart().setEnabled(true);
+			model.stop();
+			model.reset();
+			view.getBtnPlayPause().setIcon(view.getImgBtnPlay());
+			view.getBtnPlayPause().setName("play");
 		}
 	}
 }
