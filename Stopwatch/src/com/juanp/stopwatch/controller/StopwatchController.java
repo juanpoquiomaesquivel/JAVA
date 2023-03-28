@@ -27,7 +27,7 @@ public class StopwatchController {
 
 	private void init() {
 		model.addPropertyChangeListener(new SwPropertiesListener());
-		view.getBtnPlayPause().addActionListener(new SwBtnStartPauseListener());
+		view.getBtnPlayPause().addActionListener(new SwBtnPlayPauseListener());
 		view.getBtnReset().addActionListener(new SwBtnResetListener());
 	}
 
@@ -41,6 +41,7 @@ public class StopwatchController {
 						: (ms < 100 ? "0" + Integer.toString(ms).charAt(0) : Integer.toString(ms).substring(0, 2));
 
 				view.getLblMiliseconds().setText(txt);
+				view.revalidate();
 			}
 
 			if (evt.getPropertyName().equals("seconds")) {
@@ -48,6 +49,7 @@ public class StopwatchController {
 				String txt = ss < 10 ? "0" + Integer.toString(ss) : Integer.toString(ss);
 
 				view.getLblSeconds().setText(txt);
+				view.revalidate();
 			}
 
 			if (evt.getPropertyName().equals("minutes")) {
@@ -55,11 +57,12 @@ public class StopwatchController {
 				String txt = mm < 10 ? "0" + Integer.toString(mm) : Integer.toString(mm);
 
 				view.getLblMinutes().setText(txt);
+				view.revalidate();
 			}
 		}
 	}
 
-	private class SwBtnStartPauseListener implements ActionListener {
+	private class SwBtnPlayPauseListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
