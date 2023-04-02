@@ -11,6 +11,7 @@ public final class Stopwatch {
 
 	private PropertyChangeSupport pcs;
 	private Timer timer;
+	private int hours;
 	private int minutes;
 	private int seconds;
 	private int miliseconds;
@@ -29,13 +30,18 @@ public final class Stopwatch {
 					seconds = 0;
 					minutes++;
 
-					if (minutes == 100) {
-						minutes = seconds = miliseconds = 0;
+					if (minutes == 60) {
+						minutes = 0;
+						hours++;
+						
+						if (hours == 100) {
+							hours = minutes = seconds = miliseconds = 0;
+						}
 					}
 				}
 			}
 
-			fire(miliseconds, seconds, minutes);
+			fire(miliseconds, seconds, minutes, hours);
 		});
 	}
 
@@ -43,6 +49,7 @@ public final class Stopwatch {
 		pcs.firePropertyChange("miliseconds", null, values[0]);
 		pcs.firePropertyChange("seconds", null, values[1]);
 		pcs.firePropertyChange("minutes", null, values[2]);
+		pcs.firePropertyChange("hours", null, values[3]);
 	}
 
 	public final void start() {
@@ -54,8 +61,8 @@ public final class Stopwatch {
 	}
 
 	public final void reset() {
-		minutes = seconds = miliseconds = 0;
-		fire(miliseconds, seconds, minutes);
+		hours = minutes = seconds = miliseconds = 0;
+		fire(miliseconds, seconds, minutes, hours);
 	}
 
 	public int getMinutes() {
@@ -68,6 +75,10 @@ public final class Stopwatch {
 
 	public int getMiliseconds() {
 		return miliseconds;
+	}
+	
+	public int getHours() {
+		return hours;
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

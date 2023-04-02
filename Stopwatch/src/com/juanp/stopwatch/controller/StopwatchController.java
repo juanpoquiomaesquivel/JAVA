@@ -37,27 +37,34 @@ public class StopwatchController {
 		public void propertyChange(PropertyChangeEvent evt) {
 			if (evt.getPropertyName().equals("miliseconds")) {
 				int ms = (int) evt.getNewValue();
-				String txt = ms < 10 ? "00"
-						: (ms < 100 ? "0" + Integer.toString(ms).charAt(0) : Integer.toString(ms).substring(0, 2));
+				String txt = Integer.toString(ms);
+				txt = ms >= 100 ? txt.substring(0, 2) : "0" + txt.charAt(0);
 
 				view.getLblMiliseconds().setText(txt);
-				view.revalidate();
 			}
 
 			if (evt.getPropertyName().equals("seconds")) {
 				int ss = (int) evt.getNewValue();
-				String txt = ss < 10 ? "0" + Integer.toString(ss) : Integer.toString(ss);
+				String txt = Integer.toString(ss);
+				txt = ss < 10 ? "0" + txt : txt;
 
 				view.getLblSeconds().setText(txt);
-				view.revalidate();
 			}
 
 			if (evt.getPropertyName().equals("minutes")) {
 				int mm = (int) evt.getNewValue();
-				String txt = mm < 10 ? "0" + Integer.toString(mm) : Integer.toString(mm);
+				String txt = Integer.toString(mm);
+				txt = mm < 10 ? "0" + txt : txt;
 
 				view.getLblMinutes().setText(txt);
-				view.revalidate();
+			}
+
+			if (evt.getPropertyName().equals("hours")) {
+				int hh = (int) evt.getNewValue();
+				String txt = Integer.toString(hh);
+				txt = hh < 10 ? "0" + txt : txt;
+
+				view.getLblHours().setText(txt);
 			}
 		}
 	}

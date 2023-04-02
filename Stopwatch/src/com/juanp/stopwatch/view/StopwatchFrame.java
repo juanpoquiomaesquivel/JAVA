@@ -5,13 +5,18 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
 
 import javax.swing.Icon;
@@ -31,13 +36,14 @@ public class StopwatchFrame extends JFrame {
 	private JLabel lblMiliseconds;
 	private JLabel lblSeconds;
 	private JLabel lblMinutes;
+	private JLabel lblHours;
 
 	public StopwatchFrame() {
-		Font font = null;
+		Font font = Font.getFont("Arial");
+
 		try {
-			font = Font
-					.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("/assets/font/E1234-p7pER.ttf"))
-					.deriveFont(Font.BOLD, 55f);
+			font = Font.createFont(Font.TRUETYPE_FONT,
+					this.getClass().getResourceAsStream("/assets/font/E1234-p7pER.ttf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -54,17 +60,33 @@ public class StopwatchFrame extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		JPanel stopwatchPanel = new JPanel();
-		stopwatchPanel.setBackground(UIManager.getColor("Button.background"));
 		contentPane.add(stopwatchPanel);
 		stopwatchPanel.setLayout(null);
 
+		JLabel lblBg1 = new JLabel();
+		lblBg1.setOpaque(true);
+		lblBg1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBg1.setBackground(new Color(255, 255, 255, 50));
+		lblBg1.setBounds(45, 94, 410, 64);
+		lblBg1.setFont(font.deriveFont(Font.BOLD, 55f));
+		stopwatchPanel.add(lblBg1);
+
+		lblHours = new JLabel("00");
+		lblHours.setBorder(null);
+		lblHours.setForeground(Color.WHITE);
+		lblHours.setBackground(new Color(0, 0, 0));
+		lblHours.setFont(font.deriveFont(Font.BOLD, 55f));
+		lblHours.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHours.setBounds(45, 81, 100, 100);
+		stopwatchPanel.add(lblHours);
+
 		lblMinutes = new JLabel("00");
 		lblMinutes.setBorder(null);
-		lblMinutes.setForeground(Color.WHITE);
 		lblMinutes.setBackground(new Color(0, 0, 0));
-		lblMinutes.setFont(font);
+		lblMinutes.setForeground(Color.WHITE);
 		lblMinutes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMinutes.setBounds(90, 81, 100, 100);
+		lblMinutes.setFont(font.deriveFont(Font.BOLD, 55f));
+		lblMinutes.setBounds(165, 81, 100, 100);
 		stopwatchPanel.add(lblMinutes);
 
 		lblSeconds = new JLabel("00");
@@ -72,27 +94,29 @@ public class StopwatchFrame extends JFrame {
 		lblSeconds.setBackground(new Color(0, 0, 0));
 		lblSeconds.setForeground(Color.WHITE);
 		lblSeconds.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSeconds.setFont(font);
-		lblSeconds.setBounds(200, 81, 100, 100);
+		lblSeconds.setFont(font.deriveFont(Font.BOLD, 55f));
+		lblSeconds.setBounds(285, 81, 100, 100);
 		stopwatchPanel.add(lblSeconds);
 
 		lblMiliseconds = new JLabel("00");
-		lblMiliseconds.setBorder(null);
-		lblMiliseconds.setBackground(new Color(0, 0, 0));
-		lblMiliseconds.setForeground(Color.WHITE);
+		lblMiliseconds.setFocusCycleRoot(true);
+		lblMiliseconds.setFocusTraversalKeysEnabled(false);
 		lblMiliseconds.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMiliseconds.setFont(font);
-		lblMiliseconds.setBounds(310, 81, 100, 100);
+		lblMiliseconds.setForeground(Color.WHITE);
+		lblMiliseconds.setFont(font.deriveFont(Font.BOLD, 27.5f));
+		lblMiliseconds.setBorder(null);
+		lblMiliseconds.setBackground(Color.BLACK);
+		lblMiliseconds.setBounds(405, 117, 50, 50);
 		stopwatchPanel.add(lblMiliseconds);
 
 		JLabel lblTitle = new JLabel("S T O P W A T C H");
 		lblTitle.setOpaque(true);
-		lblTitle.setBackground(new Color(0, 0, 0, 50));
+		lblTitle.setBackground(new Color(255, 255, 255, 50));
 		ImageIcon imgTitle = new ImageIcon(StopwatchFrame.class.getResource("/assets/stopwatch.png"));
 		lblTitle.setIcon(resizeIcon(imgTitle, 60, 60));
 		lblTitle.setForeground(Color.WHITE);
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Century Gothic", Font.BOLD, 30));
+		lblTitle.setFont(new Font("Century Gothic", Font.BOLD, 35));
 		lblTitle.setBounds(75, 11, 350, 64);
 		stopwatchPanel.add(lblTitle);
 
@@ -125,46 +149,74 @@ public class StopwatchFrame extends JFrame {
 		btnReset.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		stopwatchPanel.add(btnReset);
 
-		JLabel lblMinutesTitle = new JLabel("min");
-		lblMinutesTitle.setBackground(new Color(0, 0, 0, 50));
-		lblMinutesTitle.setOpaque(true);
-		lblMinutesTitle.setForeground(Color.WHITE);
-		lblMinutesTitle.setFont(new Font("Century Gothic", Font.BOLD, 12));
-		lblMinutesTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMinutesTitle.setBounds(100, 169, 80, 14);
-		stopwatchPanel.add(lblMinutesTitle);
+		JLabel lblHh = new JLabel("hours");
+		lblHh.setBackground(new Color(0, 0, 0, 50));
+		lblHh.setForeground(Color.WHITE);
+		lblHh.setFont(new Font("Century Gothic", Font.BOLD, 12));
+		lblHh.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHh.setBounds(55, 160, 80, 14);
+		stopwatchPanel.add(lblHh);
 
-		JLabel lblSec = new JLabel("sec");
-		lblSec.setBackground(new Color(0, 0, 0, 50));
-		lblSec.setOpaque(true);
-		lblSec.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSec.setForeground(Color.WHITE);
-		lblSec.setFont(new Font("Century Gothic", Font.BOLD, 12));
-		lblSec.setBounds(210, 169, 80, 14);
-		stopwatchPanel.add(lblSec);
+		JLabel lblMm = new JLabel("minutes");
+		lblMm.setBackground(new Color(0, 0, 0, 50));
+		lblMm.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMm.setForeground(Color.WHITE);
+		lblMm.setFont(new Font("Century Gothic", Font.BOLD, 12));
+		lblMm.setBounds(175, 160, 80, 14);
+		stopwatchPanel.add(lblMm);
+
+		JLabel lblSs = new JLabel("seconds");
+		lblSs.setBackground(new Color(0, 0, 0, 50));
+		lblSs.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSs.setForeground(Color.WHITE);
+		lblSs.setFont(new Font("Century Gothic", Font.BOLD, 12));
+		lblSs.setBounds(295, 160, 80, 14);
+		stopwatchPanel.add(lblSs);
+
+		JButton btnExit = new JButton("");
+		btnExit.addActionListener(ae -> System.exit(EXIT_ON_CLOSE));
+		btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnExit.setContentAreaFilled(false);
+		btnExit.setFocusPainted(false);
+		btnExit.setIcon(new ImageIcon(StopwatchFrame.class.getResource("/assets/cross.png")));
+		btnExit.setBorderPainted(false);
+		btnExit.setBounds(470, 0, 30, 30);
+		stopwatchPanel.add(btnExit);
 
 		JLabel lblMs = new JLabel("ms");
-		lblMs.setBackground(new Color(0, 0, 0, 50));
-		lblMs.setOpaque(true);
 		lblMs.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMs.setForeground(Color.WHITE);
 		lblMs.setFont(new Font("Century Gothic", Font.BOLD, 12));
-		lblMs.setBounds(320, 169, 80, 14);
+		lblMs.setBackground(new Color(0, 0, 0, 50));
+		lblMs.setBounds(410, 160, 40, 14);
 		stopwatchPanel.add(lblMs);
 
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				StopwatchFrame.this.dispose();
-			}
-		});
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setFocusPainted(false);
-		btnNewButton.setIcon(new ImageIcon(StopwatchFrame.class.getResource("/assets/cross.png")));
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setBounds(470, 0, 30, 30);
-		stopwatchPanel.add(btnNewButton);
+		JLabel lblDiv1 = new JLabel(":");
+		lblDiv1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDiv1.setForeground(Color.WHITE);
+		lblDiv1.setBorder(null);
+		lblDiv1.setBackground(Color.BLACK);
+		lblDiv1.setBounds(130, 81, 50, 100);
+		lblDiv1.setFont(font.deriveFont(Font.BOLD, 55f));
+		stopwatchPanel.add(lblDiv1);
+
+		JLabel lblDiv2 = new JLabel(":");
+		lblDiv2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDiv2.setForeground(Color.WHITE);
+		lblDiv2.setBorder(null);
+		lblDiv2.setBackground(Color.BLACK);
+		lblDiv2.setBounds(250, 81, 50, 100);
+		lblDiv2.setFont(font.deriveFont(Font.BOLD, 55f));
+		stopwatchPanel.add(lblDiv2);
+
+		JLabel lblDiv3 = new JLabel(".");
+		lblDiv3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDiv3.setForeground(Color.WHITE);
+		lblDiv3.setBorder(null);
+		lblDiv3.setBackground(Color.BLACK);
+		lblDiv3.setBounds(370, 86, 50, 100);
+		lblDiv3.setFont(font.deriveFont(Font.BOLD, 55f));
+		stopwatchPanel.add(lblDiv3);
 
 		JLabel lblBackground = new JLabel("");
 		lblBackground.addMouseMotionListener(new MouseMotionAdapter() {
@@ -181,26 +233,8 @@ public class StopwatchFrame extends JFrame {
 				y = e.getY();
 			}
 		});
-		
-		JLabel lblBg1 = new JLabel("");
-		lblBg1.setOpaque(true);
-		lblBg1.setBackground(new Color(0, 0, 0, 50));
-		lblBg1.setBounds(100, 86, 80, 80);
-		stopwatchPanel.add(lblBg1);
-		
-		JLabel lblBg2 = new JLabel("");
-		lblBg2.setOpaque(true);
-		lblBg2.setBackground(new Color(0, 0, 0, 50));
-		lblBg2.setBounds(210, 86, 80, 80);
-		stopwatchPanel.add(lblBg2);
-		
-		JLabel lblBg3 = new JLabel("");
-		lblBg3.setOpaque(true);
-		lblBg3.setBackground(new Color(0, 0, 0, 50));
-		lblBg3.setBounds(320, 86, 80, 80);
-		stopwatchPanel.add(lblBg3);
 		lblBackground.setBackground(Color.BLACK);
-		lblBackground.setIcon(new ImageIcon(StopwatchFrame.class.getResource("/assets/naruto-background.gif")));
+		lblBackground.setIcon(resizeGifIcon(gif, 505, 253));
 		lblBackground.setBounds(0, 0, 500, 253);
 		stopwatchPanel.add(lblBackground);
 	}
@@ -215,24 +249,13 @@ public class StopwatchFrame extends JFrame {
 		return btnReset;
 	}
 
-	public JLabel getLblMiliseconds() {
-		return lblMiliseconds;
-	}
-
-	public JLabel getLblSeconds() {
-		return lblSeconds;
-	}
-
-	public JLabel getLblMinutes() {
-		return lblMinutes;
-	}
-
 	private final Icon imgBtnPlay = resizeIcon(
 			new ImageIcon(StopwatchFrame.class.getResource("/assets/play-button.png")), 50, 50);
 	private final Icon imgBtnPause = resizeIcon(
 			new ImageIcon(StopwatchFrame.class.getResource("/assets/pause-button.png")), 50, 50);
 	private final Icon imgBtnReset = resizeIcon(
 			new ImageIcon(StopwatchFrame.class.getResource("/assets/rewind-button.png")), 45, 45);
+	private final ImageIcon gif = new ImageIcon(StopwatchFrame.class.getResource("/assets/background.gif"));
 
 	public Icon getImgBtnPlay() {
 		return imgBtnPlay;
@@ -247,6 +270,29 @@ public class StopwatchFrame extends JFrame {
 		Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);
 
 		return new ImageIcon(resizedImage);
+	}
+
+	private static Icon resizeGifIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+		Image img = icon.getImage();
+		Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_REPLICATE);
+
+		return new ImageIcon(resizedImage);
+	}
+
+	public JLabel getLblMiliseconds() {
+		return lblMiliseconds;
+	}
+
+	public JLabel getLblSeconds() {
+		return lblSeconds;
+	}
+
+	public JLabel getLblMinutes() {
+		return lblMinutes;
+	}
+
+	public JLabel getLblHours() {
+		return lblHours;
 	}
 }
 
